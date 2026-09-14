@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cek Ganjil Genap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #4a1a82;
+        }
+
+        .kalkulator {
+            background: rgb(255, 255, 255);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            width: 80%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .hasil {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="kalkulator">
+        <h2>🔍 Cek Ganjil / Genap</h2>
+
+        <input type="number" id="angka" placeholder="Masukkan Angka"><br><br>
+
+        <button onclick="cekGanjilGenap()">Cek Angka</button>
+        <button onclick="reset()" style="background: #e74c3c;">Reset</button>
+
+        <div class="hasil">Hasil: <span id="hasilText">-</span></div>
+    </div>
+
+    <script>
+        function cekGanjilGenap() {
+            let nilai = document.getElementById('angka').value;
+
+            // Validasi jika inputan kosong
+            if (nilai === "") {
+                alert("Silakan masukkan angka terlebih dahulu!");
+                return;
+            }
+
+            let a = parseInt(nilai);
+
+            // Logika pengecekan ganjil genap menggunakan modulus % 2
+            if (a % 2 === 0) {
+                document.getElementById('hasilText').innerHTML = "Angka Genap";
+            } else {
+                document.getElementById('hasilText').innerHTML = "Angka Ganjil";
+            }
+        }
+
+        function reset() {
+            document.getElementById('angka').value = "";
+            document.getElementById('hasilText').innerHTML = "-";
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Konversi Suhu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #4a1a82;
+        }
+
+        .kalkulator {
+            background: rgb(255, 255, 255);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            width: 80%;
+            box-sizing: border-box;
+        }
+
+        input.error {
+            border: 2px solid #e74c3c;
+            background: #fdecea;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .pesan-error {
+            color: #e74c3c;
+            font-size: 14px;
+            min-height: 18px;
+            margin-top: 5px;
+        }
+
+        .hasil-box {
+            margin-top: 20px;
+            text-align: left;
+            background: #f4f6f8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .baris-hasil {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            padding: 6px 0;
+            color: #2c3e50;
+        }
+
+        .baris-hasil span:last-child {
+            font-weight: bold;
+        }
+
+        .hasil-box.kosong {
+            color: #95a5a6;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="kalkulator">
+        <h2>🌡️ Konversi Suhu</h2>
+
+        <input type="text" id="celcius" placeholder="Masukkan suhu dalam Celcius" inputmode="decimal">
+        <div class="pesan-error" id="pesanError"></div><br>
+
+        <button onclick="konversi()">Konversi</button>
+        <button onclick="reset()" style="background: #e74c3c;">Reset</button>
+
+        <div class="hasil-box kosong" id="hasilBox">
+            Hasil konversi akan tampil di sini
+        </div>
+    </div>
+
+    <script>
+        const inputCelcius = document.getElementById('celcius');
+        const pesanError = document.getElementById('pesanError');
+        const hasilBox = document.getElementById('hasilBox');
+
+        const NOL_MUTLAK_CELCIUS = -273.15;
+
+        inputCelcius.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') konversi();
+        });
+
+        inputCelcius.addEventListener('input', function () {
+            inputCelcius.classList.remove('error');
+            pesanError.textContent = '';
+        });
+
+        function tampilkanError(pesan) {
+            inputCelcius.classList.add('error');
+            pesanError.textContent = pesan;
+            hasilBox.classList.add('kosong');
+            hasilBox.innerHTML = 'Hasil konversi akan tampil di sini';
+        }
+
+        function konversi() {
+            const nilai = inputCelcius.value.trim();
+
+            if (nilai === '') {
+                tampilkanError('Input tidak boleh kosong!');
+                return;
+            }
+
+            const celcius = Number(nilai);
+
+            if (isNaN(celcius) || !isFinite(celcius)) {
+                tampilkanError('Input harus berupa angka yang valid!');
+                return;
+            }
+
+            if (celcius < NOL_MUTLAK_CELCIUS) {
+                tampilkanError(`Suhu tidak boleh kurang dari ${NOL_MUTLAK_CELCIUS}°C (nol mutlak)!`);
+                return;
+            }
+
+            inputCelcius.classList.remove('error');
+            pesanError.textContent = '';
+
+            const fahrenheit = (celcius * 9 / 5) + 32;
+            const kelvin = celcius + 273.15;
+
+            hasilBox.classList.remove('kosong');
+            hasilBox.innerHTML = `
+                <div class="baris-hasil"><span>Celcius</span><span>${celcius.toFixed(2)} °C</span></div>
+                <div class="baris-hasil"><span>Fahrenheit</span><span>${fahrenheit.toFixed(2)} °F</span></div>
+                <div class="baris-hasil"><span>Kelvin</span><span>${kelvin.toFixed(2)} K</span></div>
+            `;
+        }
+
+        function reset() {
+            inputCelcius.value = '';
+            inputCelcius.classList.remove('error');
+            pesanError.textContent = '';
+            hasilBox.classList.add('kosong');
+            hasilBox.innerHTML = 'Hasil konversi akan tampil di sini';
+            inputCelcius.focus();
+        }
+    </script>
+</body>
+
+</html>
