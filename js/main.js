@@ -77,6 +77,18 @@
     if (!typingText) return; // Hanya berjalan jika elemen ada (index.html)
 
     const names = ['Dimas Luthfi', 'Web Developer', 'Mahasiswa SI'];
+
+    // Kunci lebar slot: tiap teks dipasang tak terlihat di slot yang sama,
+    // sehingga lebar slot = teks terpanjang dan layout hero tidak bergeser saat mengetik
+    const slot = typingText.parentElement;
+    names.forEach(name => {
+        const sizer = document.createElement('span');
+        sizer.className = 'typing-sizer';
+        sizer.setAttribute('aria-hidden', 'true');
+        sizer.textContent = name;
+        slot.appendChild(sizer);
+    });
+
     let nameIndex = 0;
     let charIndex = 0;
     let isDeleting = false;

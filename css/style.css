@@ -66,14 +66,15 @@ nav {
     z-index: 100;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-nav.container {
+nav .container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 30px;
     padding: 15px 20px;
     position: relative;
 }
-.logo { font-weight: 700; font-size: 20px; }
+/* margin-right: auto mendorong logo ke kiri, sisanya (menu + tombol tema) ke kanan */
+.logo { font-weight: 700; font-size: 20px; margin-right: auto; }
 .nav-links {
     display: flex;
     list-style: none;
@@ -174,13 +175,42 @@ html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
     min-height: 100vh;
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     transition: background-color 0.3s ease;
 }
 html[data-theme="dark"] .hero {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
+.hero .container {
+    width: 100%;
+}
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
 .hero-content h1 { font-size: 48px; margin-bottom: 20px; }
 .hero-content span { color: var(--primary); }
+.hero-content p {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+/* Slot typing: lebarnya selalu sama dengan teks terpanjang, jadi hero tidak bergeser saat mengetik */
+.typing-slot {
+    display: inline-grid;
+    vertical-align: top;
+    white-space: nowrap;
+    text-align: left;
+}
+.typing-slot > * { grid-area: 1 / 1; }
+.typing-sizer { visibility: hidden; }
+@media (max-width: 600px) {
+    .hero-content h1 { font-size: 34px; }
+    .hero-content p { font-size: 16px; margin-bottom: 25px; }
+}
 .btn {
     display: inline-block; background: var(--primary); color: white;
     padding: 12px 30px; border-radius: 8px; text-decoration: none;
