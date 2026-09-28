@@ -1,4 +1,3 @@
-// ========== THEME TOGGLE (semua halaman) ==========
 (function initThemeToggle() {
     const themeToggle = document.getElementById('themeToggle');
     if (!themeToggle) return;
@@ -10,7 +9,6 @@
         );
     }
 
-    // Set label awal sesuai tema yang sudah diterapkan oleh script anti-flash di <head>
     applyLabel(document.documentElement.getAttribute('data-theme') || 'light');
 
     themeToggle.addEventListener('click', () => {
@@ -21,7 +19,6 @@
         applyLabel(next);
     });
 
-    // Kalau user belum pernah memilih manual, ikuti perubahan preferensi sistem secara live
     if (window.matchMedia) {
         const mql = window.matchMedia('(prefers-color-scheme: dark)');
         mql.addEventListener('change', (e) => {
@@ -35,7 +32,7 @@
         });
     }
 })();
-// ========== 0. NAV TOGGLE (semua halaman) ==========
+
 (function initNavToggle() {
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
@@ -53,33 +50,27 @@
         navToggle.setAttribute('aria-expanded', String(isOpen));
     });
 
-    // Tutup menu saat salah satu link diklik (UX di mobile)
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', closeMenu);
     });
 
-    // Tutup menu saat klik di luar nav
     document.addEventListener('click', (e) => {
         if (!navLinks.classList.contains('active')) return;
         const clickedInsideNav = e.target.closest('nav');
         if (!clickedInsideNav) closeMenu();
     });
 
-    // Tutup menu saat resize ke desktop
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768) closeMenu();
     });
 })();
 
-// ========== 1. TYPING EFFECT (khusus index.html) ==========
 (function initTypingEffect() {
     const typingText = document.getElementById('typing-text');
-    if (!typingText) return; // Hanya berjalan jika elemen ada (index.html)
+    if (!typingText) return;
 
-    const names = ['Dimas Luthfi', 'Web Developer', 'Mahasiswa SI'];
+    const names = ['Dimas Luthfi', 'Erzsa', 'Mahasiswa SI'];
 
-    // Kunci lebar slot: tiap teks dipasang tak terlihat di slot yang sama,
-    // sehingga lebar slot = teks terpanjang dan layout hero tidak bergeser saat mengetik
     const slot = typingText.parentElement;
     names.forEach(name => {
         const sizer = document.createElement('span');
@@ -105,24 +96,23 @@
 
         let delay = isDeleting ? 50 : 100;
         if (!isDeleting && charIndex === currentName.length) {
-            delay = 2000; // Jeda saat teks selesai diketik
+            delay = 2000;
             isDeleting = true;
         } else if (isDeleting && charIndex === 0) {
             isDeleting = false;
             nameIndex = (nameIndex + 1) % names.length;
-            delay = 500; // Jeda sebelum mengetik kata baru
+            delay = 500;
         }
 
         setTimeout(typeEffect, delay);
     }
 
-    typeEffect(); // Mulai efek
+    typeEffect();
 })();
 
-// ========== 2. GENERATE PROJECT CARDS (khusus index.html) ==========
 (function initProjectCards() {
     const projectGrid = document.getElementById('project-grid');
-    if (!projectGrid) return; // Hanya berjalan jika elemen ada (index.html)
+    if (!projectGrid) return; 
 
     const projects = [
         { title: 'Website Profil', desc: 'Website profil dengan HTML & CSS', image: 'https://via.placeholder.com/300x200/2563eb/fff?text=Profil' },
@@ -147,12 +137,10 @@
     });
 })();
 
-// ========== 3. SKILL BAR ANIMATION (khusus about.html) ==========
 (function initSkillBars() {
     const bars = document.querySelectorAll('.skill-bar-fill');
-    if (bars.length === 0) return; // Hanya berjalan jika elemen ada (about.html)
+    if (bars.length === 0) return; 
 
-    // Animasikan saat elemen masuk viewport, bukan langsung saat load
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -167,10 +155,9 @@
     bars.forEach(bar => observer.observe(bar));
 })();
 
-// ========== 4. CONTACT FORM VALIDATION (khusus contact.html) ==========
 (function initContactForm() {
     const form = document.getElementById('contactForm');
-    if (!form) return; // Hanya berjalan jika elemen ada (contact.html)
+    if (!form) return; 
 
     const submitBtn = document.getElementById('submitBtn');
     const formStatus = document.getElementById('formStatus');
@@ -210,7 +197,6 @@
         return isValid;
     }
 
-    // Validasi real-time: saat user selesai mengetik (blur) & saat mengetik ulang setelah error
     Object.keys(fields).forEach(key => {
         const field = fields[key];
         field.input.addEventListener('blur', () => validateField(key));
@@ -246,7 +232,6 @@
             return;
         }
 
-        // Tidak ada backend nyata: simulasikan pengiriman
         submitBtn.disabled = true;
         submitBtn.textContent = 'Mengirim...';
 
