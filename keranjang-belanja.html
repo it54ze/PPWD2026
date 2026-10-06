@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keranjang Belanja</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;padding:20px 12px;background:#eef3f8;color:#0f1b2d;font-family:Arial,Helvetica,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(30,60,114,.12)}
+  h1{margin:0 0 4px;color:#1e3c72;font-size:1.5rem}
+  h2{margin:0 0 10px;color:#1e3c72;font-size:1.05rem}
+  .sub{margin:0 0 16px;color:#5a6b88;font-size:.9rem}
+  .layout{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+  @media(max-width:720px){.layout{grid-template-columns:1fr}}
+  .panel{background:#f7faff;border:1px solid #c9d6ee;border-radius:14px;padding:16px;margin-bottom:16px}
+  .produk{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+  .kartu{background:#fff;border:1px solid #c9d6ee;border-radius:12px;padding:12px;text-align:center;transition:transform .2s,box-shadow .2s}
+  .kartu:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(30,60,114,.15)}
+  .ikon{width:44px;height:44px;margin:0 auto 6px;border-radius:50%;background:#1e3c72;color:#fff;font-weight:bold;font-size:1.2rem;display:grid;place-items:center;transition:transform .2s}
+  .kartu:hover .ikon{transform:scale(1.12)}
+  .nama{font-weight:bold;margin:4px 0;font-size:.9rem}
+  .harga{color:#2a5298;font-size:.85rem;margin-bottom:8px}
+  button{border:2px solid #1e3c72;background:#1e3c72;color:#fff;font-weight:bold;padding:7px 14px;border-radius:999px;cursor:pointer;font-size:.85rem;transition:transform .15s,opacity .15s}
+  button:hover:not(:disabled){transform:translateY(-1px)}
+  button:active:not(:disabled){transform:scale(.95)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  button.putih{background:#fff;color:#1e3c72}
+  button.kecil{padding:2px 9px}
+  .baris{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed #c9d6ee;font-size:.9rem}
+  .info{flex:1}
+  .info small{display:block;color:#5a6b88}
+  .qty{display:flex;align-items:center;gap:6px}
+  .kosong{color:#5a6b88;text-align:center;padding:12px 0;font-size:.9rem}
+  .total{display:flex;justify-content:space-between;margin-top:12px;font-size:1.1rem;font-weight:bold;color:#1e3c72}
+  .total del{color:#8a96ad;font-weight:normal;margin-right:8px;font-size:.9rem}
+  .hemat{display:none;color:#1b7f3b;font-size:.82rem;text-align:right;margin-top:2px}
+  .aksi{display:flex;justify-content:space-between;margin-top:12px}
+  .toast{display:none;margin-top:12px;background:#e7f6ec;color:#1b7f3b;border:1px solid #b6e2c4;border-radius:10px;padding:10px 12px;font-weight:bold;font-size:.9rem}
+  #overlay{display:none;position:fixed;inset:0;background:rgba(15,27,45,.55);padding:16px;overflow:auto;z-index:10}
+  #formPembeli{background:#fff;max-width:380px;margin:40px auto;padding:22px;border-radius:16px}
+  label{display:block;margin:10px 0 4px;font-weight:bold;font-size:.85rem;color:#1e3c72}
+  input,textarea{width:100%;padding:9px 12px;border:1.5px solid #c9d6ee;border-radius:10px;font:inherit;transition:border-color .2s,background .2s}
+  textarea{min-height:64px;resize:vertical}
+  .salah{border-color:#c62828;background:#fff6f6}
+  .benar{border-color:#1b7f3b}
+  .err{display:none;color:#c62828;font-size:.8rem;margin-top:3px}
+  .tombolForm{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Keranjang Belanja</h1>
+  <p class="sub">Diskon 10% otomatis untuk belanja di atas Rp 100.000.</p>
+  <div class="layout">
+    <div class="panel">
+      <h2>Produk</h2>
+      <div class="produk" id="produk"></div>
+    </div>
+    <div>
+      <div class="panel">
+        <h2>Keranjang</h2>
+        <div id="cartList"></div>
+        <div class="total"><span>Total</span><span id="cartTotal">Rp 0</span></div>
+        <div class="hemat" id="hemat"></div>
+        <div class="aksi">
+          <button class="putih" id="btnKosongkan">Kosongkan</button>
+          <button id="btnCheckout">Checkout</button>
+        </div>
+        <div class="toast" id="toast"></div>
+      </div>
+      <div class="panel">
+        <h2>Riwayat</h2>
+        <div id="riwayat"></div>
+        <div class="aksi"><button class="putih kecil" id="btnHapusRiwayat">Hapus riwayat</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="overlay">
+  <form id="formPembeli" novalidate>
+    <h2>Data Pembeli</h2>
+    <label for="nama">Nama Lengkap</label>
+    <input id="nama" placeholder="Minimal 3 karakter" autocomplete="name">
+    <div class="err" id="errNama">Nama minimal 3 karakter.</div>
+    <label for="alamat">Alamat</label>
+    <textarea id="alamat" placeholder="Jalan, nomor, kota (minimal 10 karakter)"></textarea>
+    <div class="err" id="errAlamat">Alamat minimal 10 karakter.</div>
+    <label for="hp">No. HP</label>
+    <input id="hp" placeholder="08123456789" inputmode="tel" autocomplete="tel">
+    <div class="err" id="errHp">No. HP tidak valid (contoh: 08123456789).</div>
+    <div class="tombolForm">
+      <button type="button" class="putih" id="btnBatal">Batal</button>
+      <button type="submit">Konfirmasi</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function () {
+  const produk = [
+    { id: 1, nama: 'Kopi Arabika', harga: 55000 },
+    { id: 2, nama: 'Teh Hijau', harga: 32000 },
+    { id: 3, nama: 'Gelas Keramik', harga: 28500 },
+    { id: 4, nama: 'Cokelat Batang', harga: 18000 },
+    { id: 5, nama: 'Madu Hutan', harga: 85000 },
+    { id: 6, nama: 'Tas Kanvas', harga: 49000 }
+  ];
+  const fields = [
+    { input: '#nama', err: '#errNama', cek: v => v.trim().length >= 3 },
+    { input: '#alamat', err: '#errAlamat', cek: v => v.trim().length >= 10 },
+    { input: '#hp', err: '#errHp', cek: v => /^(\+62|62|0)8\d{8,11}$/.test(v.replace(/[\s-]/g, '')) }
+  ];
+  let cart = [];
+
+  const rp = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+  const jumlah = () => cart.reduce((s, i) => s + i.qty, 0);
+  const bacaRiwayat = () => { try { return JSON.parse(localStorage.getItem('riwayat')) || []; } catch (e) { return []; } };
+  const kosong = teks => $('<div class="kosong"></div>').text(teks);
+
+  function hitung() {
+    const sub = cart.reduce((s, i) => s + i.harga * i.qty, 0);
+    const diskon = sub > 100000 ? sub * 0.1 : 0;
+    return { sub, diskon, total: sub - diskon };
+  }
+
+  function baris(judul, ket) {
+    const $r = $('<div class="baris"><div class="info"><strong></strong><small></small></div></div>');
+    $r.find('strong').text(judul);
+    $r.find('small').text(ket);
+    return $r;
+  }
+
+  function simpanRiwayat(total, qty, pembeli) {
+    const data = bacaRiwayat();
+    data.push({ tanggal: new Date().toISOString(), total, qty, pembeli });
+    try { localStorage.setItem('riwayat', JSON.stringify(data)); } catch (e) {}
+  }
+
+  produk.forEach(p => {
+    const $k = $('<div class="kartu"><div class="ikon"></div><div class="nama"></div><div class="harga"></div><button class="tambah">+ Keranjang</button></div>');
+    $k.find('.ikon').text(p.nama[0]);
+    $k.find('.nama').text(p.nama);
+    $k.find('.harga').text(rp(p.harga));
+    $k.find('.tambah').attr('data-id', p.id);
+    $('#produk').append($k);
+  });
+
+  function updateCartUI(idBaru) {
+    const $list = $('#cartList').empty();
+    if (!cart.length) { $list.append(kosong('Keranjang masih kosong.')); }
+    cart.forEach(i => {
+      const $r = baris(i.nama, rp(i.harga) + ' x ' + i.qty + ' = ' + rp(i.harga * i.qty)).attr('data-id', i.id);
+      const $q = $('<div class="qty"><button class="putih kecil kurang">−</button><span></span><button class="putih kecil plus">+</button><button class="putih kecil hapus">×</button></div>');
+      $q.find('span').text(i.qty);
+      $q.find('button').attr('data-id', i.id);
+      $r.append($q).appendTo($list);
+      if (i.id === idBaru && i.qty === 1) { $r.hide().slideDown(200); }
+    });
+
+    const h = hitung();
+    if (h.diskon > 0) {
+      $('#cartTotal').html('<del>' + rp(h.sub) + '</del>' + rp(h.total));
+      $('#hemat').text('Kamu hemat ' + rp(h.diskon)).slideDown(150);
+    } else {
+      $('#cartTotal').text(rp(h.total));
+      $('#hemat').slideUp(150);
+    }
+    $('#cartTotal').stop(true, true).fadeTo(100, 0.3).fadeTo(200, 1);
+    $('#btnCheckout, #btnKosongkan').prop('disabled', !cart.length);
+  }
+
+  function tampilRiwayat() {
+    const data = bacaRiwayat().reverse();
+    const $r = $('#riwayat').empty();
+    if (!data.length) { $r.append(kosong('Belum ada riwayat.')); }
+    data.forEach(d => {
+      const tgl = new Date(d.tanggal).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+      $r.append(baris(rp(d.total) + ' · ' + d.qty + ' item', tgl + (d.pembeli ? ' · ' + d.pembeli : '')));
+    });
+    $('#btnHapusRiwayat').prop('disabled', !data.length);
+  }
+
+  function ubahQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) { return; }
+    if (item.qty + delta < 1) { return hapusItem(id); }
+    item.qty += delta;
+    updateCartUI();
+  }
+
+  function hapusItem(id) {
+    $('#cartList .baris[data-id="' + id + '"]').slideUp(200, function () {
+      cart = cart.filter(i => i.id !== id);
+      updateCartUI();
+    });
+  }
+
+  $('#produk').on('click', '.tambah', function () {
+    const id = Number($(this).attr('data-id'));
+    const ada = cart.find(i => i.id === id);
+    if (ada) { ada.qty++; } else { cart.push({ ...produk.find(p => p.id === id), qty: 1 }); }
+    updateCartUI(id);
+  });
+
+  $('#cartList')
+    .on('click', '.plus', function () { ubahQty(Number($(this).attr('data-id')), 1); })
+    .on('click', '.kurang', function () { ubahQty(Number($(this).attr('data-id')), -1); })
+    .on('click', '.hapus', function () { hapusItem(Number($(this).attr('data-id'))); });
+
+  $('#btnKosongkan').click(function () {
+    $('#cartList').fadeOut(150, function () {
+      cart = [];
+      updateCartUI();
+      $(this).fadeIn(150);
+    });
+  });
+
+  $('#btnHapusRiwayat').click(function () {
+    try { localStorage.removeItem('riwayat'); } catch (e) {}
+    $('#riwayat').fadeOut(150, function () {
+      tampilRiwayat();
+      $(this).fadeIn(150);
+    });
+  });
+
+  function tutupModal() {
+    $('#overlay').fadeOut(200);
+    $('#formPembeli')[0].reset();
+    fields.forEach(f => { $(f.input).removeClass('salah benar'); $(f.err).stop(true, true).hide(); });
+  }
+
+  function validasi(f) {
+    const ok = f.cek($(f.input).val());
+    $(f.input).toggleClass('salah', !ok).toggleClass('benar', ok);
+    $(f.err).stop(true, true)[ok ? 'slideUp' : 'slideDown'](150);
+    return ok;
+  }
+
+  $('#btnCheckout').click(function () {
+    $('#overlay').fadeIn(200);
+    $('#nama').trigger('focus');
+  });
+  $('#btnBatal').click(tutupModal);
+  $('#overlay').on('mousedown', function (e) { if (e.target === this) { tutupModal(); } });
+  $(document).on('keydown', function (e) { if (e.key === 'Escape' && $('#overlay').is(':visible')) { tutupModal(); } });
+
+  fields.forEach(f => {
+    $(f.input).on('input', function () {
+      if ($(this).hasClass('salah') || $(this).hasClass('benar')) { validasi(f); }
+    });
+  });
+
+  $('#formPembeli').submit(function (e) {
+    e.preventDefault();
+    const salah = fields.filter(f => !validasi(f));
+    if (salah.length) { $(salah[0].input).trigger('focus'); return; }
+
+    const h = hitung(), qty = jumlah(), nama = $('#nama').val().trim();
+    simpanRiwayat(h.total, qty, nama);
+    cart = [];
+    updateCartUI();
+    tampilRiwayat();
+    tutupModal();
+    $('#toast')
+      .text('Terima kasih, ' + nama + '! Pesanan ' + rp(h.total) + ' (' + qty + ' item) dikonfirmasi.')
+      .stop(true, true).fadeIn(200).delay(3000).fadeOut(400);
+  });
+
+  updateCartUI();
+  tampilRiwayat();
+});
+</script>
+</body>
+</html>
