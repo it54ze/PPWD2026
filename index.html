@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberTech - Toko Laptop & Gaming Center</title>
+    <!-- CSS Eksternal -->
+    <link rel="stylesheet" href="style.css">
+    <!-- CDN jQuery & jQuery Validation Plugin -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+</head>
+<body>
+
+    <!-- NAVBAR DROPDOWN -->
+    <nav>
+        <div class="container nav-container">
+            <a href="#" class="logo">💻 CyberTech</a>
+            <ul class="nav-list">
+                <li><a href="#beranda">Beranda</a></li>
+                <li class="dropdown">
+                    <button class="dropdown-btn" type="button">Kategori Laptop ▾</button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#katalog">Laptop Gaming</a></li>
+                        <li><a href="#katalog">Laptop Tipis / Ultrabook</a></li>
+                        <li><a href="#katalog">Workstation & Editor</a></li>
+                    </ul>
+                </li>
+                <li><a href="#tentang">Tentang</a></li>
+                <li><a href="#pesan">Pesan Cepat</a></li>
+                <li><a href="#member">Garansi & Member</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header id="beranda" class="hero">
+        <div class="container">
+            <h1>CyberTech Laptop Store</h1>
+            <p>Pusat Laptop Gaming, Workstation, dan Ultrabook Resmi Bergaransi</p>
+        </div>
+    </header>
+
+    <!-- KATALOG LAPTOP DENGAN TAB -->
+    <section id="katalog" class="container">
+        <h2>Katalog Laptop Pilihan</h2>
+        <div class="tabs">
+            <button class="tab active" type="button" data-target="#tab-gaming">Gaming Series</button>
+            <button class="tab" type="button" data-target="#tab-ultrabook">Ultrabook</button>
+            <button class="tab" type="button" data-target="#tab-workstation">Workstation</button>
+        </div>
+
+        <!-- TAB GAMING -->
+        <div id="tab-gaming" class="tab-panel menu-grid">
+            <div class="menu-card">
+                <h3>ROG Strix G16</h3>
+                <p>Intel Core i7-13650HX, RTX 4060 8GB, 16GB RAM DDR5, 1TB SSD. Layar 165Hz ROG Nebula Display.</p>
+                <div class="price">Rp 24.999.000</div>
+            </div>
+            <div class="menu-card">
+                <h3>Lenovo Legion Pro 5</h3>
+                <p>AMD Ryzen 7 7745HX, RTX 4070 8GB, 32GB RAM DDR5, 1TB SSD. Layar WQXGA 240Hz 500 nits.</p>
+                <div class="price">Rp 28.500.000</div>
+            </div>
+        </div>
+
+        <!-- TAB ULTRABOOK -->
+        <div id="tab-ultrabook" class="tab-panel menu-grid" style="display: none;">
+            <div class="menu-card">
+                <h3>MacBook Air M3</h3>
+                <p>Apple M3 Chip 8-Core CPU & 10-Core GPU, 16GB Unified Memory, 512GB SSD. Baterai tahan 18 jam.</p>
+                <div class="price">Rp 20.999.000</div>
+            </div>
+            <div class="menu-card">
+                <h3>Asus Zenbook 14 OLED</h3>
+                <p>Intel Core Ultra 7 155H, Intel Arc Graphics, 32GB RAM, 1TB SSD. Layar 3K OLED Touchscreen.</p>
+                <div class="price">Rp 21.499.000</div>
+            </div>
+        </div>
+
+        <!-- TAB WORKSTATION -->
+        <div id="tab-workstation" class="tab-panel menu-grid" style="display: none;">
+            <div class="menu-card">
+                <h3>Dell XPS 16</h3>
+                <p>Intel Core Ultra 9 185H, RTX 4070 8GB, 32GB LPDDR5x, 1TB SSD NVMe. Layar 4K+ OLED Touch.</p>
+                <div class="price">Rp 42.000.000</div>
+            </div>
+            <div class="menu-card">
+                <h3>ThinkPad P1 Gen 6</h3>
+                <p>Intel Core i9-13900H, Nvidia RTX A2000 Ada 8GB, 32GB RAM, 2TB SSD. Sertifikasi ISV CAD/3D.</p>
+                <div class="price">Rp 48.900.000</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TENTANG KAMI -->
+    <section id="tentang" style="background:#fff;">
+        <div class="container" style="max-width: 700px; text-align: center;">
+            <h2>Tentang CyberTech</h2>
+            <p>Penyedia solusi laptop terpercaya dengan jaminan 100% Produk Original dan Garansi Resmi Distributor. Kami siap melayani konsultasi spesifikasi sesuai kebutuhan pemrogram, desainer, dan pemain gim.</p>
+        </div>
+    </section>
+
+    <!-- FORM PESANAN CEPAT -->
+    <section id="pesan" class="form-section">
+        <div class="container">
+            <h2>Form Pesanan Cepat</h2>
+            <form id="formPesan" class="form-box" novalidate>
+                <div class="form-group">
+                    <label for="nama">Nama Pembeli</label>
+                    <input type="text" id="nama" class="field wajib" placeholder="Masukkan nama Anda">
+                    <div class="hint">Nama diperlukan untuk pendaftaran transaksi.</div>
+                </div>
+                <div class="form-group">
+                    <label for="pilihLaptop">Pilih Model Laptop</label>
+                    <select id="pilihLaptop" class="field wajib">
+                        <option value="">-- Pilih Model Laptop --</option>
+                        <option>ROG Strix G16</option>
+                        <option>Lenovo Legion Pro 5</option>
+                        <option>MacBook Air M3</option>
+                        <option>Asus Zenbook 14 OLED</option>
+                        <option>Dell XPS 16</option>
+                        <option>ThinkPad P1 Gen 6</option>
+                    </select>
+                    <div class="hint">Pilih unit laptop yang ingin dibeli.</div>
+                </div>
+                <button type="submit" class="btn">Kirim Pesanan</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FORM MEMBER & GARANSI (JQUERY VALIDATION PLUGIN - 6 INPUT) -->
+    <section id="member">
+        <div class="container">
+            <h2>Pendaftaran Akun Garansi & Member</h2>
+            <form id="formMember" class="form-box">
+                <div class="form-group">
+                    <label for="mNama">Nama Lengkap</label>
+                    <input type="text" id="mNama" name="nama" placeholder="Nama lengkap sesuai KTP">
+                </div>
+                <div class="form-group">
+                    <label for="mEmail">Email Aktif</label>
+                    <input type="text" id="mEmail" name="email" placeholder="nama@domain.com">
+                </div>
+                <div class="form-group">
+                    <label for="mHp">Nomor WhatsApp / HP</label>
+                    <input type="text" id="mHp" name="hp" placeholder="10-12 digit nomor HP">
+                </div>
+                <div class="form-group">
+                    <label for="mUsia">Usia Pembeli</label>
+                    <input type="text" id="mUsia" name="usia" placeholder="Minimal 17 tahun">
+                </div>
+                <div class="form-group">
+                    <label for="mPassword">Password Akun</label>
+                    <input type="password" id="mPassword" name="password" placeholder="Minimal 8 karakter, kombinasi huruf & angka">
+                </div>
+                <div class="form-group">
+                    <label for="mKonfirmasi">Konfirmasi Password</label>
+                    <input type="password" id="mKonfirmasi" name="konfirmasi" placeholder="Ulangi password di atas">
+                </div>
+                <button type="submit" class="btn">Daftar Member</button>
+                <div class="sukses" id="sukses">
+                    <strong>Pendaftaran Berhasil!</strong> Akun member dan garansi digital CyberTech Anda telah aktif.
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 CyberTech Laptop Store | Tugas Mandiri Praktikum Pemrograman Web Dasar</p>
+    </footer>
+
+    <!-- TOAST & BACK TO TOP -->
+    <div id="toast"></div>
+    <button id="backToTop" type="button" aria-label="Kembali ke atas">&#8593;</button>
+
+    <!-- JS Eksternal -->
+    <script src="script.js"></script>
+</body>
+</html>
