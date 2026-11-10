@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator IPK</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+        }
+        header, footer {
+            background: #12283f;
+            color: #fff;
+            padding: 16px;
+            text-align: center;
+        }
+        main {
+         max-width: 700px;
+         margin: 20px auto;
+         padding: 0 12px;   
+        }
+        section {
+            background: #fff;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+        input, select {
+            width: 100px;
+            padding: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 8px 14px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        #pesan {
+            color: red;
+            margin-top: 8px;
+        }
+        #hasil {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header> 
+        <h1>Kalkulator IPK</h1>
+        <p>NIM: H1101251004 | Nama: Dimas Luthfi Salim</p>
+    </header>
+    <main>
+        <section id="input-section">
+            <h2>Input Mata Kuliah</h2>
+            <table>
+                <thead> 
+                    <tr> 
+                        <th>Mata Kuliah</th>
+                        <th>SKS</th>
+                        <th>Nilai Huruf</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-input"></tbody>
+            </table>
+            <button id="tambah">+ Tambah Baris</button>
+            <button id="hitung">Hitung IPK</button>
+            <p id="pesan"></p>
+        </section>
+        <section id="hasil-section">
+            <h2>Hasil</h2>
+            <table> 
+                <thead>
+                    <tr> 
+                        <th>Mata Kuliah</th>
+                        <th>SKS</th>
+                        <th>Nilai</th>
+                        <th>Bobot</th>
+                        <th>Bobot x SKS</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-hasil"></tbody>
+            </table>
+            <p id="hasil"></p>
+        </section>
+    </main>
+    <footer>
+        <small>Kalkulator IPK</small>
+    </footer>
+
+    <script> 
+        const bobotNilai = {A: 4, AB: 3.5, B: 3, BC: 2.5, C: 2, D: 1, E: 0};
+        const tabelInput = document.getElementById("tabel-input");
+        const tabelHasil = document.getElementById("tabel-hasil");
+        const pesan = document.getElementById("pesan");
+        const hasil = document.getElementById("hasil");
+        
+        for (let i = 0; i < 3; i++) tambahBaris();
+        
+        function tambahBaris() {
+            const tr = document.createElement("tr");
+            let opsi = "";
+            for (const huruf in bobotNilai) {
+                opsi += `<option value="${huruf}">${huruf}</option>`;
+            }
+            tr.innerHTML = `
+                <td><input type="text" class="nama" placeholder="Nama MK"></td>
+                <td><input type="text" class="sks" placeholder="SKS"></td>
+                <td><select class="huruf">${opsi}</select></td>
+                <td><button type="button" class="hapus">Hapus</button></td>`;
+            tr.querySelector(".hapus").addEventListener("click", function() {
+                tr.remove();
+            });
+            tabelInput.appendChild(tr);
+        }
+
+        function hitungIPK() {
+            pesan.textContent = "";
+            hasil.textContent = "";
+            tabelHasil.innerHTML = "";
+
+            const baris = tabelInput.querySelectorAll("tr");
+            const daftarMK = [];
+
+            for (let i = 0; i < baris.length; i++) {
+                const nama = baris[i].querySelector(".nama").value.trim();
+                const sksTeks = baris[i].querySelector(".sks").value.trim();
+                const huruf = baris[i].querySelector(".huruf").value;
+                const sks = Number(sksTeks);
+
+                if (nama === "" || sksTeks === "" || isNaN(sks) || sks <= 0 || !Number.isInteger(sks)) {
+                    pesan.textContent = "Baris " + (i + 1) + ": nama harus diisi dan SKS harus angka bulat > 0.";
+                    return;
+                }
+                daftarMK.push({nama: nama, sks: sks, huruf: huruf, bobot: bobotNilai[huruf]});
+            }
+
+            let totalMutu = 0;
+            let totalSKS = 0;
+            daftarMK.forEach(function (mk){
+                const mutu = mk.bobot * mk.sks;
+                totalMutu += mutu;
+                totalSKS += mk.sks;
+                tabelHasil.innerHTML += `
+                    <tr>
+                        <td>${mk.nama}</td>
+                        <td>${mk.sks}</td>
+                        <td>${mk.huruf}</td>
+                        <td>${mk.bobot}</td>
+                        <td>${mutu}</td>
+                    </tr>`;
+            });
+            const ipk = totalMutu / totalSKS;
+            hasil.textContent = "IPK: " + ipk.toFixed(2) + " (Total SKS: " + totalSKS + ")";
+        }
+        document.getElementById("tambah").addEventListener("click", tambahBaris);
+        document.getElementById("hitung").addEventListener("click", hitungIPK);
+    </script>
+</body>
+</html>
